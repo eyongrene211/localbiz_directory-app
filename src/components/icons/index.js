@@ -1,0 +1,10 @@
+export { default as CoffeeIcon } from './CoffeeIcon.jsx';
+export { default as RestaurantsIcon } from './RestaurantIcon.jsx';
+export { default as BusinessShopsIcon } from './BusinessShopsIcons.jsx';
+export { default as HealthFitnessIcon } from './HealthFitnessIcon.jsx';
+export { default as HospitalMedIcon } from './HospitalMedIcon.jsx';
+export { default as FinanceIcon } from './FinanceIcon.jsx';
+export { default as TravelTourismIcon } from './TravelTourismIcon.jsx';
+export { default as RealEstateIcon } from './RealEstateIcon.jsx';
+export { default as WeddingEventsIcon } from './WeddingEventsIcon.jsx';
+export { default as FashionIcon } from './Fashion&BeautyIcon.jsx';
