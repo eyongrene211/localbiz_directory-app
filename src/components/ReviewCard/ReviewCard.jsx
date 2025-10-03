@@ -72,7 +72,7 @@ const SingleReviewCard = ({ review }) => {
         </div>
 
         {/* Comment profile */}
-        <div className='h-auto min-h-[107px]  flex flex-col gap-2 items-center justify-center text-center relative z-30 bg-white rounded-lg p-4 sm:p-6'>
+        <div className='h-auto min-h-[107px]  flex flex-col gap-2 items-center justify-center text-center relative z-30 bg-white rounded-lg p-4 sm:p-2'>
           {/* Profile image */}
           <Image 
             src={review.image || '/assets/images/closeup_pic1.jpg'}

@@ -27,6 +27,9 @@
     "react-countup": "^6.5.3",
     "react-dom": "19.1.0",
     "react-select": "^5.10.2",
+    "react-slick": "^0.31.0",
+    "react-social-icons": "^6.25.0",
+    "slick-carousel": "^1.8.1",
     "swiper": "^11.2.10",
     "tailwind-merge": "^3.3.1"
   },
