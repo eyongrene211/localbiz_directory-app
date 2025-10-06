@@ -1,8 +1,8 @@
-import { Suspense }      from 'react'
-import SignupPageContent from './SignupPageContent'
-import { Loader2 }       from 'lucide-react'
+import { Suspense }          from 'react'
+import ForgotPasswordContent from './ForgotPasswordContent'
+import { Loader2 }           from 'lucide-react'
 
-export default function SignupPage() {
+export default function ForgotPasswordPage() {
   return (
     <Suspense
       fallback={
@@ -11,7 +11,7 @@ export default function SignupPage() {
         </div>
       }
     >
-      <SignupPageContent />
+      <ForgotPasswordContent />
     </Suspense>
   )
 }
