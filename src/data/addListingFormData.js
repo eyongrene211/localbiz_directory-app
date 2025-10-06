@@ -14,6 +14,11 @@ export const categoryOptions = [
   { value: 'school', label: '🎓 School & Education' },
   { value: 'entertainment', label: '🎬 Entertainment' },
   { value: 'service', label: '🔧 Service Provider' },
+  { value: 'auto', label: '🚗 Auto Services' },
+  { value: 'beauty', label: '💄 Beauty & Cosmetics' },
+  { value: 'real-estate', label: '🏠 Real Estate' },
+  { value: 'finance', label: '💰 Financial Services' },
+  { value: 'tech', label: '💻 Technology' },
   { value: 'other', label: '📌 Other' },
 ]
 
@@ -34,36 +39,64 @@ export const regionOptions = [
 ]
 
 /**
- * Cities (can be expanded per region)
+ * Major cities in Cameroon
  */
 export const cityOptions = [
+  // Centre Region
   { value: 'yaounde', label: 'Yaoundé', region: 'centre' },
+  { value: 'obala', label: 'Obala', region: 'centre' },
+  { value: 'mbalmayo', label: 'Mbalmayo', region: 'centre' },
+  
+  // Littoral Region
   { value: 'douala', label: 'Douala', region: 'littoral' },
+  { value: 'edea', label: 'Edéa', region: 'littoral' },
+  { value: 'nkongsamba', label: 'Nkongsamba', region: 'littoral' },
+  
+  // West Region
   { value: 'bafoussam', label: 'Bafoussam', region: 'west' },
+  { value: 'dschang', label: 'Dschang', region: 'west' },
+  { value: 'mbouda', label: 'Mbouda', region: 'west' },
+  
+  // Northwest Region
   { value: 'bamenda', label: 'Bamenda', region: 'northwest' },
+  { value: 'kumbo', label: 'Kumbo', region: 'northwest' },
+  { value: 'wum', label: 'Wum', region: 'northwest' },
+  
+  // Southwest Region
   { value: 'buea', label: 'Buea', region: 'southwest' },
   { value: 'limbe', label: 'Limbe', region: 'southwest' },
-  { value: 'garoua', label: 'Garoua', region: 'north' },
-  { value: 'maroua', label: 'Maroua', region: 'far-north' },
+  { value: 'kumba', label: 'Kumba', region: 'southwest' },
+  { value: 'tiko', label: 'Tiko', region: 'southwest' },
+  
+  // South Region
+  { value: 'ebolowa', label: 'Ebolowa', region: 'south' },
+  { value: 'kribi', label: 'Kribi', region: 'south' },
+  { value: 'sangmelima', label: 'Sangmélima', region: 'south' },
+  
+  // East Region
+  { value: 'bertoua', label: 'Bertoua', region: 'east' },
+  { value: 'batouri', label: 'Batouri', region: 'east' },
+  
+  // Adamawa Region
   { value: 'ngaoundere', label: 'Ngaoundéré', region: 'adamawa' },
-]
-
-/**
- * Business hours presets
- */
-export const businessHoursOptions = [
-  { value: '24/7', label: '24/7 (Always Open)' },
-  { value: 'weekdays', label: 'Weekdays Only (Mon-Fri)' },
-  { value: 'weekends', label: 'Weekends Only (Sat-Sun)' },
-  { value: 'custom', label: 'Custom Hours' },
+  { value: 'meiganga', label: 'Meiganga', region: 'adamawa' },
+  
+  // North Region
+  { value: 'garoua', label: 'Garoua', region: 'north' },
+  { value: 'guider', label: 'Guider', region: 'north' },
+  
+  // Far North Region
+  { value: 'maroua', label: 'Maroua', region: 'far-north' },
+  { value: 'kousseri', label: 'Kousséri', region: 'far-north' },
+  { value: 'mokolo', label: 'Mokolo', region: 'far-north' },
 ]
 
 /**
  * Price range options
  */
 export const priceRangeOptions = [
-  { value: '$', label: '$ - Budget Friendly' },
-  { value: '$$', label: '$$ - Moderate' },
-  { value: '$$$', label: '$$$ - Expensive' },
-  { value: '$$$$', label: '$$$$ - Very Expensive' },
+  { value: '$', label: '$ - Budget Friendly (Under 5,000 XAF)' },
+  { value: '$$', label: '$$ - Moderate (5,000 - 15,000 XAF)' },
+  { value: '$$$', label: '$$$ - Expensive (15,000 - 30,000 XAF)' },
+  { value: '$$$$', label: '$$$$ - Very Expensive (30,000+ XAF)' },
 ]

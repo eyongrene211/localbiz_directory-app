@@ -1,13 +1,18 @@
 'use client'
-import React, { useState }  from 'react'
-import { useUser }          from '@clerk/nextjs'
-import Image                from 'next/image'
-import CreatableSelect      from 'react-select/creatable'
-import { toast }            from 'react-toastify'
+import React, { useState, useEffect } from 'react'
+import { useUser }                    from '@clerk/nextjs'
+import { useRouter }                  from 'next/navigation'
+import Image                          from 'next/image'
+import CreatableSelect                from 'react-select/creatable'
+import { toast }                      from 'react-toastify'
 import {
   Building2,
   MapPin,
   Phone,
+  Mail,
+  Globe,
+  Clock,
+  DollarSign,
   Upload,
   X,
   Loader2,
@@ -17,10 +22,10 @@ import {
   ArrowRight,
 } from 'lucide-react'
 
-import NavBarComponent      from '@/components/NavBarComponent/NavBarComponent'
-import FooterComponent      from '@/components/Footer/FooterComponent'
-import { selectClassNames } from '@/config/selectStyles'
-import { amenitiesData }    from '@/data/amenitiesData'
+import NavBarComponent                from '@/components/NavBarComponent/NavBarComponent'
+import FooterComponent                from '@/components/Footer/FooterComponent'
+import { selectClassNames }           from '@/config/selectStyles'
+import { amenitiesData }              from '@/data/amenitiesData'
 import {
   categoryOptions,
   regionOptions,
@@ -30,32 +35,53 @@ import {
 
 export default function AddListingPage() {
   const { isSignedIn, user, isLoaded } = useUser()
+  const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [currentStep, setCurrentStep] = useState(1)
   const [selectedImages, setSelectedImages] = useState([])
   const [imagePreviewUrls, setImagePreviewUrls] = useState([])
 
+  // Form state
   const [formData, setFormData] = useState({
+    // Basic Info
     businessName: '',
     category: null,
     description: '',
+
+    // Location
     region: null,
     city: null,
     address: '',
     mapCoordinates: '',
+
+    // Contact
     phone: '',
     email: '',
     website: '',
     whatsapp: '',
+
+    // Details
     priceRange: null,
     amenities: [],
+    
+    // Hours
     businessHours: '',
   })
 
+  // Redirect if not signed in (client-side protection)
+  useEffect(() => {
+    if (isLoaded && !isSignedIn) {
+      console.log('❌ Not signed in, redirecting to login')
+      router.replace('/login?redirect=/add-listing&action=add-listing')
+    }
+  }, [isLoaded, isSignedIn, router])
+
+  // Handle form field changes
   const handleChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
   }
 
+  // Handle amenities toggle
   const toggleAmenity = (amenityLabel) => {
     setFormData((prev) => ({
       ...prev,
@@ -65,6 +91,7 @@ export default function AddListingPage() {
     }))
   }
 
+  // Handle image upload
   const handleImageUpload = (e) => {
     const files = Array.from(e.target.files)
     const maxImages = 6
@@ -74,25 +101,33 @@ export default function AddListingPage() {
       return
     }
 
+    // Validate file sizes (max 10MB per file)
     const invalidFiles = files.filter((file) => file.size > 10 * 1024 * 1024)
     if (invalidFiles.length > 0) {
       toast.error('Some files are too large. Max size is 10MB per image.')
       return
     }
 
+    // Generate preview URLs
     const newPreviewUrls = files.map((file) => URL.createObjectURL(file))
     setImagePreviewUrls((prev) => [...prev, ...newPreviewUrls])
     setSelectedImages((prev) => [...prev, ...files])
-    toast.success(`${files.length} image(s) added`)
+    
+    toast.success(`${files.length} image(s) added successfully`)
   }
 
+  // Remove image
   const removeImage = (index) => {
+    // Revoke object URL to prevent memory leak
     URL.revokeObjectURL(imagePreviewUrls[index])
+    
     setImagePreviewUrls((prev) => prev.filter((_, i) => i !== index))
     setSelectedImages((prev) => prev.filter((_, i) => i !== index))
+    
     toast.info('Image removed')
   }
 
+  // Validate current step
   const validateStep = (step) => {
     switch (step) {
       case 1:
@@ -109,6 +144,7 @@ export default function AddListingPage() {
           return false
         }
         return true
+        
       case 2:
         if (!formData.region) {
           toast.error('Please select a region')
@@ -123,22 +159,26 @@ export default function AddListingPage() {
           return false
         }
         return true
+        
       case 3:
         if (!formData.phone.trim()) {
           toast.error('Phone number is required')
           return false
         }
         return true
+        
       case 4:
         if (selectedImages.length === 0) {
           toast.warning('We recommend adding at least one image')
         }
         return true
+        
       default:
         return true
     }
   }
 
+  // Handle step navigation
   const goToNextStep = () => {
     if (validateStep(currentStep)) {
       setCurrentStep((prev) => Math.min(4, prev + 1))
@@ -151,30 +191,42 @@ export default function AddListingPage() {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
+  // Form submission
   const handleSubmit = async (e) => {
     e.preventDefault()
     
-    if (!validateStep(4)) return
+    if (!validateStep(4)) {
+      return
+    }
 
     setLoading(true)
 
     try {
+      // Simulate API call (replace with your actual API)
       await new Promise((resolve) => setTimeout(resolve, 2000))
+
+      // Here you would typically:
+      // 1. Upload images to storage (Cloudinary, AWS S3, etc.)
+      // 2. Submit form data to your backend API
+      // 3. Create listing in database
 
       const listingData = {
         ...formData,
         userId: user.id,
         userEmail: user.primaryEmailAddress?.emailAddress,
         userName: `${user.firstName} ${user.lastName}`,
-        images: selectedImages.map((file) => file.name),
+        images: selectedImages.map((file) => file.name), // In real app, these would be URLs
         createdAt: new Date().toISOString(),
       }
 
       console.log('Submitting Listing:', listingData)
+      console.log('Images:', selectedImages)
+
       toast.success('🎉 Listing created successfully!')
       
+      // Redirect after success
       setTimeout(() => {
-        window.location.href = '/listings'
+        router.push('/listings')
       }, 2000)
       
     } catch (error) {
@@ -185,12 +237,24 @@ export default function AddListingPage() {
     }
   }
 
-  // Simple loading check - let middleware handle auth
+  // Show loading while checking auth
   if (!isLoaded) {
     return (
       <div className="min-h-screen bg-white dark:bg-slate-900 flex flex-col items-center justify-center">
         <Loader2 className="animate-spin text-blue-600" size={48} />
         <p className="text-slate-700 dark:text-slate-300 mt-4">Loading...</p>
+      </div>
+    )
+  }
+
+  // If not signed in, show loading (will redirect via useEffect)
+  if (!isSignedIn) {
+    return (
+      <div className="min-h-screen bg-white dark:bg-slate-900 flex flex-col items-center justify-center">
+        <Loader2 className="animate-spin text-blue-600" size={48} />
+        <p className="text-slate-700 dark:text-slate-300 mt-4">
+          Redirecting to login...
+        </p>
       </div>
     )
   }
@@ -208,13 +272,11 @@ export default function AddListingPage() {
           <p className="text-blue-100">
             Share your business with thousands of potential customers across Cameroon
           </p>
-          {isSignedIn && user && (
-            <div className="mt-4 flex items-center gap-2 text-sm text-blue-100">
-              <span className="bg-blue-800/50 px-3 py-1 rounded-full">
-                Signed in as: {user.firstName || user.emailAddresses[0].emailAddress}
-              </span>
-            </div>
-          )}
+          <div className="mt-4 flex items-center gap-2 text-sm text-blue-100">
+            <span className="bg-blue-800/50 px-3 py-1 rounded-full">
+              Signed in as: {user.firstName || user.emailAddresses[0].emailAddress}
+            </span>
+          </div>
         </div>
       </div>
 
@@ -244,7 +306,9 @@ export default function AddListingPage() {
                 {step < totalSteps && (
                   <div
                     className={`flex-1 h-1 mx-2 rounded transition-colors ${
-                      currentStep > step ? 'bg-blue-600' : 'bg-gray-200 dark:bg-slate-700'
+                      currentStep > step
+                        ? 'bg-blue-600'
+                        : 'bg-gray-200 dark:bg-slate-700'
                     }`}
                   />
                 )}
@@ -260,12 +324,13 @@ export default function AddListingPage() {
           
           {/* Step 1: Basic Information */}
           {currentStep === 1 && (
-            <div className="bg-white dark:bg-slate-800 rounded-lg shadow-md p-6 space-y-6">
+            <div className="bg-white dark:bg-slate-800 rounded-lg shadow-md p-6 space-y-6 animate-fadeIn">
               <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
                 <Building2 size={24} className="text-blue-600" />
                 Basic Information
               </h2>
 
+              {/* Business Name */}
               <div>
                 <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                   Business Name <span className="text-red-500">*</span>
@@ -280,6 +345,7 @@ export default function AddListingPage() {
                 />
               </div>
 
+              {/* Category */}
               <div>
                 <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                   Category <span className="text-red-500">*</span>
@@ -295,6 +361,7 @@ export default function AddListingPage() {
                 />
               </div>
 
+              {/* Description */}
               <div>
                 <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                   Description <span className="text-red-500">*</span>
@@ -313,6 +380,7 @@ export default function AddListingPage() {
                 </p>
               </div>
 
+              {/* Price Range */}
               <div>
                 <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                   Price Range (Optional)
@@ -332,12 +400,13 @@ export default function AddListingPage() {
 
           {/* Step 2: Location */}
           {currentStep === 2 && (
-            <div className="bg-white dark:bg-slate-800 rounded-lg shadow-md p-6 space-y-6">
+            <div className="bg-white dark:bg-slate-800 rounded-lg shadow-md p-6 space-y-6 animate-fadeIn">
               <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
                 <MapPin size={24} className="text-blue-600" />
                 Location Details
               </h2>
 
+              {/* Region & City */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
@@ -370,6 +439,7 @@ export default function AddListingPage() {
                 </div>
               </div>
 
+              {/* Address */}
               <div>
                 <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                   Street Address <span className="text-red-500">*</span>
@@ -384,6 +454,7 @@ export default function AddListingPage() {
                 />
               </div>
 
+              {/* Map Coordinates */}
               <div>
                 <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                   Map Coordinates (Optional)
@@ -404,12 +475,13 @@ export default function AddListingPage() {
 
           {/* Step 3: Contact & Details */}
           {currentStep === 3 && (
-            <div className="bg-white dark:bg-slate-800 rounded-lg shadow-md p-6 space-y-6">
+            <div className="bg-white dark:bg-slate-800 rounded-lg shadow-md p-6 space-y-6 animate-fadeIn">
               <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
                 <Phone size={24} className="text-blue-600" />
                 Contact & Details
               </h2>
 
+              {/* Contact Information */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
@@ -465,6 +537,7 @@ export default function AddListingPage() {
                 </div>
               </div>
 
+              {/* Business Hours */}
               <div>
                 <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                   Business Hours
@@ -478,6 +551,7 @@ export default function AddListingPage() {
                 />
               </div>
 
+              {/* Amenities */}
               <div>
                 <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3">
                   Amenities & Features
@@ -499,7 +573,9 @@ export default function AddListingPage() {
                         className="rounded text-blue-600 focus:ring-blue-500"
                       />
                       <Icon size={16} className="text-blue-600 dark:text-blue-400" />
-                      <span className="text-sm text-slate-700 dark:text-slate-300">{label}</span>
+                      <span className="text-sm text-slate-700 dark:text-slate-300">
+                        {label}
+                      </span>
                     </label>
                   ))}
                 </div>
@@ -509,17 +585,18 @@ export default function AddListingPage() {
 
           {/* Step 4: Images */}
           {currentStep === 4 && (
-            <div className="bg-white dark:bg-slate-800 rounded-lg shadow-md p-6 space-y-6">
+            <div className="bg-white dark:bg-slate-800 rounded-lg shadow-md p-6 space-y-6 animate-fadeIn">
               <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
                 <ImageIcon size={24} className="text-blue-600" />
                 Business Images
               </h2>
 
               <p className="text-sm text-slate-600 dark:text-slate-400">
-                Upload up to 6 high-quality images of your business
+                Upload up to 6 high-quality images of your business (interior, exterior, products, etc.)
               </p>
 
-              <div className="border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-lg p-8 text-center hover:border-blue-500 transition-colors cursor-pointer">
+              {/* Image Upload */}
+              <div className="border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-lg p-8 text-center hover:border-blue-500 dark:hover:border-blue-400 transition-colors cursor-pointer">
                 <input
                   type="file"
                   id="image-upload"
@@ -528,10 +605,15 @@ export default function AddListingPage() {
                   onChange={handleImageUpload}
                   className="hidden"
                 />
-                <label htmlFor="image-upload" className="cursor-pointer flex flex-col items-center gap-3">
+                <label
+                  htmlFor="image-upload"
+                  className="cursor-pointer flex flex-col items-center gap-3"
+                >
                   <Upload size={48} className="text-slate-400" />
                   <div>
-                    <p className="text-slate-700 dark:text-slate-300 font-medium">Click to upload images</p>
+                    <p className="text-slate-700 dark:text-slate-300 font-medium">
+                      Click to upload images
+                    </p>
                     <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
                       PNG, JPG up to 10MB (Max 6 images)
                     </p>
@@ -542,6 +624,7 @@ export default function AddListingPage() {
                 </label>
               </div>
 
+              {/* Image Previews */}
               {imagePreviewUrls.length > 0 && (
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                   {imagePreviewUrls.map((url, index) => (
@@ -617,6 +700,23 @@ export default function AddListingPage() {
       </div>
 
       <FooterComponent />
+
+      {/* Add animation styles */}
+      <style jsx>{`
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+            transform: translateY(10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        .animate-fadeIn {
+          animation: fadeIn 0.3s ease-out;
+        }
+      `}</style>
     </div>
   )
 }
