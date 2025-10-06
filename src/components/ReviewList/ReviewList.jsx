@@ -1,75 +1,64 @@
 'use client'
-import React, { useEffect, useState } from 'react'
-import { Swiper, SwiperSlide }        from 'swiper/react'
-import { Pagination, Autoplay }       from 'swiper/modules' // Removed Navigation import
-import reviewsData                    from '@/data/reviewsData'
-import SingleReviewCard               from '../SingleReviewCard/SingleReviewCard'
-
+import React                                from 'react'
+import { Swiper, SwiperSlide }              from 'swiper/react'
+import { Navigation, Pagination, Autoplay } from 'swiper/modules'
+import { generalReviews }                   from '@/data/reviewsData'
+import StarRating                           from '@/components/StarRating/StarRating'
 import 'swiper/css'
+import 'swiper/css/navigation'
 import 'swiper/css/pagination'
-import 'swiper/css/autoplay'
-// import './review-swiper.css' // <--- Custom CSS for theme bullets (see next section)
 
-const ReviewList = () => {
-  const [isMounted, setIsMounted] = useState(false)
-  useEffect(() => setIsMounted(true), [])
-
-  if (!isMounted) {
-    return (
-      <div className="w-full h-auto flex items-center justify-center bg-gray-50 rounded-lg">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto mb-2"></div>
-          <p className="text-gray-600">Loading reviews...</p>
-        </div>
-      </div>
-    )
-  }
-
-  if (!reviewsData || reviewsData.length === 0) {
-    return (
-      <div className="w-full h-full flex items-center justify-center">
-        <p className="text-gray-500">No reviews available</p>
-      </div>
-    )
-  }
-
+export default function ReviewList() {
   return (
-    <div className="w-full h-auto">
+    <div className="w-full">
       <Swiper
-        modules={[Pagination, Autoplay]} // No Navigation here
-        spaceBetween={25}
-        centeredSlides={false}
-        pagination={{ clickable: true, dynamicBullets: true }}
-        autoplay={{ delay: 5000, disableOnInteraction: false, pauseOnMouseEnter: true }}
-        loop
-        style={{ paddingBottom: '56px', paddingTop: '8px' }}
+        modules={[Navigation, Pagination, Autoplay]}
+        spaceBetween={24}
+        slidesPerView={1}
+        navigation
+        pagination={{ clickable: true }}
+        autoplay={{ delay: 5000, disableOnInteraction: false }}
         breakpoints={{
-          320:   { slidesPerView: 1, spaceBetween: 8 },
-          480:   { slidesPerView: 1, spaceBetween: 14 },
-          640:   { slidesPerView: 1, spaceBetween: 18 },
-          768:   { slidesPerView: 2, spaceBetween: 20 },
-          1024:  { slidesPerView: 3, spaceBetween: 24 },
-          1280:  { slidesPerView: 4, spaceBetween: 30 },
+          640: { slidesPerView: 2 },
+          1024: { slidesPerView: 3 },
         }}
-        className="review-swiper"
       >
-        {reviewsData.map((review) => (
-          <SwiperSlide
-            key={review.id}
-            style={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              height: 'auto',
-              minHeight: '390px'
-            }}
-          >
-            <SingleReviewCard review={review} />
+        {generalReviews.map((review) => (
+          <SwiperSlide key={review.id}>
+            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg p-6 shadow-sm hover:shadow-md transition-all h-full">
+              {/* Header */}
+              <div className="flex items-center gap-4 mb-4">
+                <img
+                  src={review.image}
+                  alt={review.author}
+                  className="w-14 h-14 rounded-full object-cover border-2 border-slate-200 dark:border-slate-700"
+                />
+                <div>
+                  <h4 className="font-semibold text-slate-800 dark:text-slate-100">
+                    {review.author}
+                  </h4>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">
+                    {review.position}
+                  </p>
+                </div>
+              </div>
+
+              {/* Rating & Title */}
+              <div className="mb-3">
+                <StarRating rating={review.rating} size={16} />
+                <h5 className="font-semibold text-slate-800 dark:text-slate-100 mt-2">
+                  {review.title}
+                </h5>
+              </div>
+
+              {/* Content */}
+              <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+                {review.content}
+              </p>
+            </div>
           </SwiperSlide>
         ))}
       </Swiper>
     </div>
   )
 }
-
-export default ReviewList

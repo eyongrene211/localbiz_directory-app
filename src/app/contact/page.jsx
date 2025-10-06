@@ -1,104 +1,149 @@
-'use client';
-import React                from 'react';
-import NavBarComponent      from '@/components/NavBarComponent/NavBarComponent';
-import {
-    BriefcaseBusiness, Calendar, Chromium, Facebook, Heart, Instagram,
-    Mail, MapPin, Phone, Star, Twitter, YoutubeIcon
-} from 'lucide-react';
-import AccordionDemo        from '@/components/AccordionComponent/AccordionComponent';
-import FooterComponent      from '@/components/Footer/FooterComponent';
+'use client'
 
-import BusinessOwnerDetails from '@/components/BusinessOwnerDetails/BusinessOwnerDetails';
-import SubscribeLetter      from '@/components/SubscribeSection/SubscribeLetter';
+import React           from 'react'
+import NavBarComponent from '../../components/NavBarComponent/NavBarComponent'
+import ContactForm     from '../../components/ContactForm/ContactForm'
+import FooterComponent from '../../components/Footer/FooterComponent'
+import SubscribeLetter from '@/components/SubscribeSection/SubscribeLetter'
+import { SocialIcon }  from 'react-social-icons'
 
-const Page = () => {
-    return (
-        <div className="min-h-screen bg-white overflow-x-hidden">
-            <NavBarComponent />
+const page = () => {
+  const socialLinks = {
+    facebook: "https://facebook.com",
+    twitter: "https://twitter.com",
+    instagram: "https://instagram.com",
+    pinterest: "https://pinterest.com",
+  }
 
-            {/* Hero Section with background image */}
-           <section
-  className="relative w-full bg-[url('/assets/images/Healthpic.jpg')] bg-cover bg-center text-white h-[500px] sm:h-[550px] md:h-[600px] lg:h-[600px] xl:h-[650px]"
->
-  {/* Overlay */}
-  <div className="absolute inset-0 bg-black/40"></div>
+  return (
+    <>
+      <div className="min-h-screen bg-white overflow-x-hidden">
+        <NavBarComponent />
 
-  {/* Content Container */}
-  <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex flex-col justify-center lg:justify-between lg:flex-row lg:items-end gap-6 lg:pb-12">
+        <main
+          className="relative w-full bg-[url('/assets/contact_bgpic.png')] bg-cover bg-center bg-no-repeat"
+          style={{ minHeight: '100vh' }}
+        >
+          {/* Overlay to darken background */}
+          <div className="absolute inset-0 bg-[#00000080] z-10"></div>
 
-    {/* Left: Avatar + Title + Info */}
-    <div className="flex flex-col md:flex-row md:items-center gap-4 lg:gap-6">
-      {/* Avatar */}
-      <div className="w-24 h-24 md:w-28 md:h-28 p-2 bg-blue-500 rounded-lg flex-shrink-0">
-        <img src="/assets/images/image.png" alt="avatar_pic" className="w-full h-full object-cover rounded-md" />
+          <section className="relative z-20 max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-20 md:py-28">
+            {/* Header */}
+            <div className="text-center mb-16">
+              <h1 className="text-white font-extrabold text-4xl sm:text-5xl lg:text-6xl tracking-tight">
+                Contact Us
+              </h1>
+              <p className="mt-4 max-w-3xl mx-auto text-lg text-gray-200">
+                Cicero famously orated against his political opponent Lucius Sergius Catilina.
+              </p>
+            </div>
+
+            {/* Info Cards - Desktop: 3 columns, Tablet: 2+1, Mobile: 1 column */}
+            <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+              
+              {/* Card 1 - Mail */}
+              <div className="flex flex-col items-center text-center gap-4 p-8 rounded-xl bg-[#ffffff25] shadow-lg hover:bg-[#ffffff35] transition-all duration-300">
+                <svg
+                  stroke="currentColor"
+                  fill="currentColor"
+                  strokeWidth="0"
+                  viewBox="0 0 512 512"
+                  height="2.5em"
+                  width="2.5em"
+                  className="text-white"
+                >
+                  <path d="M320 336c0 8.84-7.16 16-16 16h-96c-8.84 0-16-7.16-16-16v-48H0v144c0 25.6 22.4 48 48 48h416c25.6 0 48-22.4 48-48V288H320v48zm144-208h-80V80c0-25.6-22.4-48-48-48H176c-25.6 0-48 22.4-48 48v48H48c-25.6 0-48 22.4-48 48v80h512v-80c0-25.6-22.4-48-48-48zm-144 0H192V96h128v32z"></path>
+                </svg>
+                <span className="text-white text-lg font-semibold">Drop a Mail</span>
+                <span className="text-white/90 text-sm">Shreethemes@gmail.com</span>
+                <span className="text-white/90 text-sm">Support@yourdomain.com</span>
+              </div>
+
+              {/* Card 2 - Phone */}
+              <div className="flex flex-col items-center text-center gap-4 p-8 rounded-xl bg-[#ffffff25] shadow-lg hover:bg-[#ffffff35] transition-all duration-300">
+                <svg
+                  className="text-white"
+                  stroke="currentColor"
+                  fill="currentColor"
+                  strokeWidth="0"
+                  viewBox="0 0 512 512"
+                  height="2.5em"
+                  width="2.5em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path d="M192 208c0-17.67-14.33-32-32-32h-16c-35.35 0-64 28.65-64 64v48c0 35.35 28.65 64 64 64h16c17.67 0 32-14.33 32-32V208zm176 144c35.35 0 64-28.65 64-64v-48c0-35.35-28.65-64-64-64h-16c-17.67 0-32 14.33-32 32v112c0 17.67 14.33 32 32 32h16zM256 0C113.18 0 4.58 118.83 0 256v16c0 8.84 7.16 16 16 16h16c8.84 0 16-7.16 16-16v-16c0-114.69 93.31-208 208-208s208 93.31 208 208h-.12c.08 2.43.12 165.72.12 165.72 0 23.35-18.93 42.28-42.28 42.28H320c0-26.51-21.49-48-48-48h-32c-26.51 0-48 21.49-48 48s21.49 48 48 48h181.72c49.86 0 90.28-40.42 90.28-90.28V256C507.42 118.83 398.82 0 256 0z"></path>
+                </svg>
+                <span className="text-white text-lg font-semibold">Call Us</span>
+                <span className="text-white/90 text-sm">+123 456 7890</span>
+                <span className="text-white/90 text-sm">+098 765 4321</span>
+              </div>
+
+              {/* Card 3 - Social */}
+              <div className="flex flex-col items-center justify-center text-center gap-4 p-8 rounded-xl bg-[#ffffff25] shadow-lg hover:bg-[#ffffff35] transition-all duration-300 sm:col-span-2 lg:col-span-1">
+                <svg
+                  className="text-white"
+                  stroke="currentColor"
+                  fill="currentColor"
+                  strokeWidth="0"
+                  viewBox="0 0 496 512"
+                  height="2.5em"
+                  width="2.5em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path d="M336.5 160C322 70.7 287.8 8 248 8s-74 62.7-88.5 152h177zM152 256c0 22.2 1.2 43.5 3.3 64h185.3c2.1-20.5 3.3-41.8 3.3-64s-1.2-43.5-3.3-64H155.3c-2.1 20.5-3.3 41.8-3.3 64zm324.7-96c-28.6-67.9-86.5-120.4-158-141.6 24.4 33.8 41.2 84.7 50 141.6h108zM177.2 18.4C105.8 39.6 47.8 92.1 19.3 160h108c8.7-56.9 25.5-107.8 49.9-141.6zM487.4 192H372.7c2.1 21 3.3 42.5 3.3 64s-1.2 43-3.3 64h114.6c5.5-20.5 8.6-41.8 8.6-64s-3.1-43.5-8.5-64zM120 256c0-21.5 1.2-43 3.3-64H8.6C3.2 212.5 0 233.8 0 256s3.2 43.5 8.6 64h114.6c-2-21-3.2-42.5-3.2-64zm39.5 96c14.5 89.3 48.7 152 88.5 152s74-62.7 88.5-152h-177zm159.3 141.6c71.4-21.2 129.4-73.7 158-141.6h-108c-8.8 56.9-25.6 107.8-50 141.6zM19.3 352c28.6 67.9 86.5 120.4 158 141.6-24.4-33.8-41.2-84.7-50-141.6h-108z"></path>
+                </svg>
+                <span className="text-white text-lg font-semibold">Connect with Social</span>
+                <span className="text-white/90 text-sm">Let's Connect with Us via social media</span>
+                
+                {/* Social Icons with custom styling */}
+                <div className="flex gap-4 mt-4 justify-center flex-wrap">
+                  <a href={socialLinks.facebook} target="_blank" rel="noopener noreferrer" className="social-icon-wrapper">
+                    <SocialIcon url={socialLinks.facebook} fgColor="#ffffff" bgColor="transparent" style={{ height: 40, width: 40 }} />
+                  </a>
+                  <a href={socialLinks.twitter} target="_blank" rel="noopener noreferrer" className="social-icon-wrapper">
+                    <SocialIcon url={socialLinks.twitter} fgColor="#ffffff" bgColor="transparent" style={{ height: 40, width: 40 }} />
+                  </a>
+                  <a href={socialLinks.instagram} target="_blank" rel="noopener noreferrer" className="social-icon-wrapper">
+                    <SocialIcon url={socialLinks.instagram} fgColor="#ffffff" bgColor="transparent" style={{ height: 40, width: 40 }} />
+                  </a>
+                  <a href={socialLinks.pinterest} target="_blank" rel="noopener noreferrer" className="social-icon-wrapper">
+                    <SocialIcon url={socialLinks.pinterest} fgColor="#ffffff" bgColor="transparent" style={{ height: 40, width: 40 }} />
+                  </a>
+                </div>
+              </div>
+
+            </div>
+          </section>
+        </main>
+
+        {/* Contact Form Section */}
+        <ContactForm />
+
+        {/* Subscribe to Newsletter */}
+        <SubscribeLetter/>
+
+        {/* Footer */}
+        <FooterComponent />
+
+        {/* Inline styles for social icon hover */}
+        <style jsx>{`
+          .social-icon-wrapper {
+            display: inline-block;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+          }
+          
+          .social-icon-wrapper:hover {
+            border-color: #3b82f6;
+            background-color: rgba(59, 130, 246, 0.2);
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+          }
+        `}</style>
       </div>
+    </>
+  )
+}
 
-      {/* Title + Location + Reviews */}
-      <div className="flex flex-col justify-start gap-2">
-        {/* Title */}
-        <div className="flex items-center gap-2 flex-wrap">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold">Christmas Monday</h1>
-          <span className="w-6 h-6">
-            <img
-              width={22}
-              src="data:image/svg+xml,%3csvg%20version='1.2'%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20561%20560'%20width='561'%20height='560'%3e%3cstyle%3e.a{fill:%232ca862}.b{fill:%23fff}%3c/style%3e%3cpath%20class='a'%20d='m561%20293.1c0%2019.6-4.7%2037.8-14.1%2054.4-9.4%2016.6-22%2029.6-37.9%2038.7q0.7%204.4%200.7%2013.8c0%2029.6-10%2054.8-29.7%2075.6-19.8%2020.9-43.6%2031.2-71.5%2031.2-12.5%200-24.4-2.3-35.6-6.8-8.8%2017.9-21.4%2032.3-37.9%2043.4-16.4%2011.1-34.4%2016.6-54%2016.6-20%200-38.2-5.4-54.4-16.3-16.3-10.8-28.7-25.4-37.5-43.7-11.3%204.5-23.1%206.8-35.7%206.8-27.8%200-51.8-10.3-71.8-31.2-20-20.8-30-46.1-30-75.6%200-3.3%200.5-7.9%201.2-13.8-15.8-9.2-28.4-22.1-37.8-38.7-9.3-16.6-14-34.8-14-54.4%200-20.8%205.2-39.9%2015.6-57.2%2010.4-17.3%2024.4-30.1%2041.9-38.4-4.6-12.4-6.9-25-6.9-37.5%200-29.5%2010-54.8%2030-75.6%2020-20.7%2044-31.2%2071.8-31.2%2012.5%200%2024.4%202.3%2035.7%206.8%208.8-17.9%2021.3-32.3%2037.8-43.4%2016.5-11%2034.5-16.6%2054.1-16.6%2019.6%200%2037.6%205.6%2054%2016.5%2016.4%2011.1%2029.1%2025.5%2037.9%2043.4%2011.2-4.6%2023-6.9%2035.6-6.9%2027.9%200%2051.7%2010.4%2071.5%2031.3%2019.8%2020.9%2029.7%2046.1%2029.7%2075.6%200%2013.8-2.1%2026.3-6.3%2037.5%2017.5%208.3%2031.5%2021.1%2041.9%2038.4%2010.4%2017.4%2015.7%2036.5%2015.7%2057.3z'/%3e%3cpath%20class='b'%20d='m137.7%20310l30.9-38.9%2077.9%2061.7%20138.8-175.4%2038.9%2030.9-169.6%20214.3z'/%3e%3c/svg%3e"
-              alt="verified"
-            />
-          </span>
-        </div>
-
-        {/* Location & Category */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:gap-6 text-sm text-white/90">
-          <div className="flex items-center gap-2 flex-wrap">
-            <MapPin /> Old Paris, France
-            <BriefcaseBusiness /> Events & Weddings
-          </div>
-
-          {/* Reviews */}
-          <div className="flex items-center gap-2">
-            <ul className="flex items-center gap-[2px]">
-              {Array.from({ length: 5 }).map((_, i) => (
-                <li key={i}><Star size={16} /></li>
-              ))}
-            </ul>
-            <span className="text-sm">(42 Reviews)</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    {/* Right: Event Time + Call Button */}
-    <div className="flex flex-col md:flex-row md:items-center md:gap-6 gap-3 mt-4 md:mt-0">
-      <div className="flex flex-col text-white">
-        <span className="text-sm">Event Time</span>
-        <p className="text-lg md:text-base">24 Nov 2024 - 10:30AM To 14:30PM</p>
-      </div>
-      <button className="mt-2 md:mt-0 w-36 h-14 flex items-center justify-center gap-2 rounded-full border border-white text-white hover:bg-white/10 transition">
-        <Phone /> Call Now
-      </button>
-    </div>
-  </div>
-</section>
-
-
-
-            {/* Main Content */}
-            <main className="w-full pb-20">
-                <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12">
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                        {/* Left Column */}
-                        <AccordionDemo category="Events & Weddings" />
-
-                        {/* Right Column */}
-                        <BusinessOwnerDetails />
-                    </div>
-                </section>
-            </main>
-                    <SubscribeLetter/>
-
-            <FooterComponent />
-        </div>
-    );
-};
-
-export default Page;
+export default page

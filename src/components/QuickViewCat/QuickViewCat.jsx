@@ -1,10 +1,16 @@
-const QuickViewCat = () => {
-    return (
-        <>
-            <div className="w-[70px] h-[70px] bg-white border border-gray-300 rounded-full flex justify-center items-center text-gray-700 hover:scale-105 hover:shadow-lg transition-all duration-300 cursor-pointer">
-                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 576 512" class="fs-3" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M183.1 235.3c33.7 20.7 62.9 48.1 85.8 80.5c7 9.9 13.4 20.3 19.1 31c5.7-10.8 12.1-21.1 19.1-31c22.9-32.4 52.1-59.8 85.8-80.5C437.6 207.8 490.1 192 546 192l9.9 0c11.1 0 20.1 9 20.1 20.1C576 360.1 456.1 480 308.1 480L288 480l-20.1 0C119.9 480 0 360.1 0 212.1C0 201 9 192 20.1 192l9.9 0c55.9 0 108.4 15.8 153.1 43.3zM301.5 37.6c15.7 16.9 61.1 71.8 84.4 164.6c-38 21.6-71.4 50.8-97.9 85.6c-26.5-34.8-59.9-63.9-97.9-85.6c23.2-92.8 68.6-147.7 84.4-164.6C278 33.9 282.9 32 288 32s10 1.9 13.5 5.6z"></path></svg>
-            </div>
-        </>
-    );
-}
+import Link from "next/link";
+
+const QuickViewCat = ({ label, icon, href }) => {
+  return (
+    <Link href={href} className="group">
+      <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-700 rounded-full flex justify-center items-center text-gray-700 dark:text-gray-200 hover:scale-105 hover:shadow-lg transition-transform duration-300 cursor-pointer mx-auto">
+        {icon}
+      </div>
+      <div className="mt-2 text-center text-xs sm:text-sm text-gray-200 dark:text-gray-200 font-medium group-hover:text-blue-600 dark:group-hover:text-blue-400">
+        {label}
+      </div>
+    </Link>
+  );
+};
+
 export default QuickViewCat;
