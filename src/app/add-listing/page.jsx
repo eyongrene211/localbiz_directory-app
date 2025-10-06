@@ -1,9 +1,9 @@
 'use client'
-import React, { useState }  from 'react'
-import { useUser }          from '@clerk/nextjs'
-import { useRouter }        from 'next/navigation'
-import CreatableSelect      from 'react-select/creatable'
-import { toast }            from 'react-toastify'
+import React, { useState, useEffect } from 'react'
+import { useUser }                    from '@clerk/nextjs'
+import { useRouter }                  from 'next/navigation'
+import CreatableSelect                from 'react-select/creatable'
+import { toast }                      from 'react-toastify'
 import {
   Building2,
   MapPin,
@@ -17,10 +17,10 @@ import {
   ArrowRight,
 } from 'lucide-react'
 
-import NavBarComponent      from '@/components/NavBarComponent/NavBarComponent'
-import FooterComponent      from '@/components/Footer/FooterComponent'
-import { selectClassNames } from '@/config/selectStyles'
-import { amenitiesData }    from '@/data/amenitiesData'
+import NavBarComponent                from '@/components/NavBarComponent/NavBarComponent'
+import FooterComponent                from '@/components/Footer/FooterComponent'
+import { selectClassNames }           from '@/config/selectStyles'
+import { amenitiesData }              from '@/data/amenitiesData'
 import {
   categoryOptions,
   regionOptions,
@@ -31,11 +31,11 @@ import {
 export default function AddListingPage() {
   const { isSignedIn, user, isLoaded } = useUser()
   const router = useRouter()
+  
   const [loading, setLoading] = useState(false)
   const [currentStep, setCurrentStep] = useState(1)
   const [selectedImages, setSelectedImages] = useState([])
   const [imagePreviewUrls, setImagePreviewUrls] = useState([])
-
   const [formData, setFormData] = useState({
     businessName: '',
     category: null,
@@ -53,9 +53,14 @@ export default function AddListingPage() {
     businessHours: '',
   })
 
-  // ❌ REMOVED THE USEFFECT - This was causing the loop!
+  useEffect(() => {
+    if (isLoaded && !isSignedIn) {
+      router.replace('/login?redirect=/add-listing&action=add-listing')
+    }
+  }, [isLoaded, isSignedIn, router])
 
   const handleChange = (field, value) => {
+    console.log('📝 Changing field:', field, 'to:', value)
     setFormData((prev) => ({ ...prev, [field]: value }))
   }
 
@@ -96,67 +101,148 @@ export default function AddListingPage() {
     toast.info('Image removed')
   }
 
-  const validateStep = (step) => {
-    switch (step) {
-      case 1:
-        if (!formData.businessName.trim()) {
-          toast.error('Business name is required')
-          return false
-        }
-        if (!formData.category) {
-          toast.error('Please select a category')
-          return false
-        }
-        if (!formData.description.trim() || formData.description.length < 20) {
-          toast.error('Description must be at least 20 characters')
-          return false
-        }
-        return true
-      case 2:
-        if (!formData.region) {
-          toast.error('Please select a region')
-          return false
-        }
-        if (!formData.city) {
-          toast.error('Please select a city')
-          return false
-        }
-        if (!formData.address.trim()) {
-          toast.error('Street address is required')
-          return false
-        }
-        return true
-      case 3:
-        if (!formData.phone.trim()) {
-          toast.error('Phone number is required')
-          return false
-        }
-        return true
-      case 4:
-        if (selectedImages.length === 0) {
-          toast.warning('We recommend adding at least one image')
-        }
-        return true
-      default:
-        return true
+  // Enhanced validation with detailed logging
+  const validateCurrentStep = () => {
+    console.log('🔍 VALIDATING STEP:', currentStep)
+    console.log('📋 Current Form Data:', formData)
+    
+    if (currentStep === 1) {
+      console.log('--- Step 1 Validation ---')
+      console.log('businessName:', formData.businessName)
+      console.log('businessName trimmed:', formData.businessName?.trim())
+      console.log('businessName length:', formData.businessName?.trim()?.length)
+      
+      if (!formData.businessName?.trim()) {
+        console.log('❌ FAILED: Business name is empty')
+        toast.error('Business name is required')
+        return false
+      }
+      console.log('✅ Business name OK')
+      
+      console.log('category:', formData.category)
+      if (!formData.category) {
+        console.log('❌ FAILED: Category not selected')
+        toast.error('Please select a category')
+        return false
+      }
+      console.log('✅ Category OK')
+      
+      console.log('description:', formData.description)
+      console.log('description length:', formData.description?.length)
+      if (!formData.description?.trim()) {
+        console.log('❌ FAILED: Description is empty')
+        toast.error('Description is required')
+        return false
+      }
+      if (formData.description.length < 20) {
+        console.log('❌ FAILED: Description too short:', formData.description.length, '/ 20')
+        toast.error(`Description must be at least 20 characters (currently ${formData.description.length})`)
+        return false
+      }
+      console.log('✅ Description OK')
+      
+      console.log('✅✅✅ STEP 1 VALIDATION PASSED ✅✅✅')
+      return true
     }
+    
+    if (currentStep === 2) {
+      console.log('--- Step 2 Validation ---')
+      
+      console.log('region:', formData.region)
+      if (!formData.region) {
+        console.log('❌ FAILED: Region not selected')
+        toast.error('Please select a region')
+        return false
+      }
+      console.log('✅ Region OK')
+      
+      console.log('city:', formData.city)
+      if (!formData.city) {
+        console.log('❌ FAILED: City not selected')
+        toast.error('Please select a city')
+        return false
+      }
+      console.log('✅ City OK')
+      
+      console.log('address:', formData.address)
+      if (!formData.address?.trim()) {
+        console.log('❌ FAILED: Address is empty')
+        toast.error('Street address is required')
+        return false
+      }
+      console.log('✅ Address OK')
+      
+      console.log('✅✅✅ STEP 2 VALIDATION PASSED ✅✅✅')
+      return true
+    }
+    
+    if (currentStep === 3) {
+      console.log('--- Step 3 Validation ---')
+      
+      console.log('phone:', formData.phone)
+      if (!formData.phone?.trim()) {
+        console.log('❌ FAILED: Phone is empty')
+        toast.error('Phone number is required')
+        return false
+      }
+      console.log('✅ Phone OK')
+      
+      console.log('✅✅✅ STEP 3 VALIDATION PASSED ✅✅✅')
+      return true
+    }
+    
+    console.log('✅ Step', currentStep, 'has no validation')
+    return true
   }
 
-  const goToNextStep = () => {
-    if (validateStep(currentStep)) {
-      setCurrentStep((prev) => Math.min(4, prev + 1))
+  // Next step handler
+  const goToNextStep = (e) => {
+    if (e) {
+      e.preventDefault()
+      e.stopPropagation()
+    }
+
+    console.log('========== NEXT STEP CLICKED ==========')
+    console.log('Current Step:', currentStep)
+
+    const isValid = validateCurrentStep()
+    console.log('Validation Result:', isValid)
+
+    if (!isValid) {
+      console.log('❌ Validation failed, not moving')
+      return
+    }
+
+    const nextStep = currentStep + 1
+    console.log('✅ Moving to step:', nextStep)
+
+    setCurrentStep((prevStep) => {
+      const newStep = prevStep + 1
+      console.log('State update: from', prevStep, 'to', newStep)
+      return newStep
+    })
+
+    setTimeout(() => {
       window.scrollTo({ top: 0, behavior: 'smooth' })
-    }
+    }, 100)
   }
 
-  const goToPreviousStep = () => {
-    setCurrentStep((prev) => Math.max(1, prev - 1))
+  const goToPreviousStep = (e) => {
+    if (e) {
+      e.preventDefault()
+      e.stopPropagation()
+    }
+
+    setCurrentStep((prevStep) => Math.max(1, prevStep - 1))
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    if (!validateStep(4)) return
+    
+    if (selectedImages.length === 0) {
+      toast.warning('We recommend adding at least one image')
+    }
 
     setLoading(true)
 
@@ -187,7 +273,6 @@ export default function AddListingPage() {
     }
   }
 
-  // Simple loading check only
   if (!isLoaded) {
     return (
       <div className="min-h-screen bg-white dark:bg-slate-900 flex flex-col items-center justify-center">
@@ -197,7 +282,15 @@ export default function AddListingPage() {
     )
   }
 
-  // Let middleware handle auth - just render the page
+  if (!isSignedIn) {
+    return (
+      <div className="min-h-screen bg-white dark:bg-slate-900 flex flex-col items-center justify-center">
+        <Loader2 className="animate-spin text-blue-600" size={48} />
+        <p className="text-slate-700 dark:text-slate-300 mt-4">Redirecting to login...</p>
+      </div>
+    )
+  }
+
   const totalSteps = 4
 
   return (
@@ -211,7 +304,7 @@ export default function AddListingPage() {
           <p className="text-blue-100">
             Share your business with thousands of potential customers across Cameroon
           </p>
-          {isSignedIn && user && (
+          {user && (
             <div className="mt-4 flex items-center gap-2 text-sm text-blue-100">
               <span className="bg-blue-800/50 px-3 py-1 rounded-full">
                 Signed in as: {user.firstName || user.emailAddresses?.[0]?.emailAddress}
@@ -257,9 +350,27 @@ export default function AddListingPage() {
         </div>
       </div>
 
+      {/* Debug Info */}
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
+        <div className="bg-yellow-100 dark:bg-yellow-900/20 border border-yellow-300 dark:border-yellow-700 rounded-lg p-4">
+          <p className="text-sm font-bold text-yellow-800 dark:text-yellow-200">
+            DEBUG: Current Step = {currentStep}
+          </p>
+          <p className="text-xs text-yellow-700 dark:text-yellow-300 mt-1">
+            Business Name: "{formData.businessName}" ({formData.businessName.length} chars)
+          </p>
+          <p className="text-xs text-yellow-700 dark:text-yellow-300">
+            Category: {formData.category?.label || '(empty)'}
+          </p>
+          <p className="text-xs text-yellow-700 dark:text-yellow-300">
+            Description: "{formData.description.substring(0, 50)}..." ({formData.description.length} chars)
+          </p>
+        </div>
+      </div>
+
       {/* Form */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="space-y-6">
           
           {/* Step 1: Basic Information */}
           {currentStep === 1 && (
@@ -277,7 +388,6 @@ export default function AddListingPage() {
                   type="text"
                   value={formData.businessName}
                   onChange={(e) => handleChange('businessName', e.target.value)}
-                  required
                   placeholder="e.g., Café du Centre"
                   className="w-full px-4 py-2.5 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
                 />
@@ -305,7 +415,6 @@ export default function AddListingPage() {
                 <textarea
                   value={formData.description}
                   onChange={(e) => handleChange('description', e.target.value)}
-                  required
                   rows={6}
                   maxLength={500}
                   placeholder="Describe your business, services, and what makes you unique..."
@@ -381,7 +490,6 @@ export default function AddListingPage() {
                   type="text"
                   value={formData.address}
                   onChange={(e) => handleChange('address', e.target.value)}
-                  required
                   placeholder="e.g., Avenue Kennedy, Bastos"
                   className="w-full px-4 py-2.5 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
                 />
@@ -398,9 +506,6 @@ export default function AddListingPage() {
                   placeholder="e.g., 3.8480, 11.5021"
                   className="w-full px-4 py-2.5 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
                 />
-                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                  Enter latitude and longitude separated by comma
-                </p>
               </div>
             </div>
           )}
@@ -422,7 +527,6 @@ export default function AddListingPage() {
                     type="tel"
                     value={formData.phone}
                     onChange={(e) => handleChange('phone', e.target.value)}
-                    required
                     placeholder="+237 6XX XXX XXX"
                     className="w-full px-4 py-2.5 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
                   />
@@ -492,7 +596,7 @@ export default function AddListingPage() {
                       className={`flex items-center gap-2 p-3 border rounded-lg cursor-pointer transition-all ${
                         formData.amenities.includes(label)
                           ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
-                          : 'border-slate-300 dark:border-slate-600 hover:border-blue-300 dark:hover:border-blue-700'
+                          : 'border-slate-300 dark:border-slate-600 hover:border-blue-300'
                       }`}
                     >
                       <input
@@ -561,9 +665,6 @@ export default function AddListingPage() {
                       >
                         <X size={16} />
                       </button>
-                      <div className="absolute bottom-2 left-2 bg-black/60 text-white text-xs px-2 py-1 rounded">
-                        Image {index + 1}
-                      </div>
                     </div>
                   ))}
                 </div>
@@ -598,7 +699,8 @@ export default function AddListingPage() {
               </button>
             ) : (
               <button
-                type="submit"
+                type="button"
+                onClick={handleSubmit}
                 disabled={loading}
                 className="flex items-center gap-2 px-8 py-2.5 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
@@ -616,7 +718,7 @@ export default function AddListingPage() {
               </button>
             )}
           </div>
-        </form>
+        </div>
       </div>
 
       <FooterComponent />

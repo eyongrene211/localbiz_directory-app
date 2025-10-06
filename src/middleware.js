@@ -21,7 +21,7 @@ const isPublicRoute = createRouteMatcher([
 // Protected routes - require login
 const isProtectedRoute = createRouteMatcher([
   '/dashboard(.*)',
-  '/add-listing(.*)',
+  
   '/edit-listing/(.*)',
   '/my-listings(.*)',
   '/favorites(.*)',
