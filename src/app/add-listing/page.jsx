@@ -350,7 +350,7 @@ export default function AddListingPage() {
         </div>
       </div>
 
-      {/* Debug Info */}
+      {/* Debug Info
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
         <div className="bg-yellow-100 dark:bg-yellow-900/20 border border-yellow-300 dark:border-yellow-700 rounded-lg p-4">
           <p className="text-sm font-bold text-yellow-800 dark:text-yellow-200">
@@ -366,7 +366,7 @@ export default function AddListingPage() {
             Description: "{formData.description.substring(0, 50)}..." ({formData.description.length} chars)
           </p>
         </div>
-      </div>
+      </div> */}
 
       {/* Form */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

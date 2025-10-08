@@ -1,13 +1,14 @@
 'use client'
-import React, { useState }                                     from 'react'
-import { useSignUp }                                           from '@clerk/nextjs'
+import React, { useState, useEffect }                          from 'react'
+import { useSignUp, useUser }                                  from '@clerk/nextjs'
 import { useRouter, useSearchParams }                          from 'next/navigation'
 import Link                                                    from 'next/link'
 import Image                                                   from 'next/image'
 import { Mail, Lock, User, Eye, EyeOff, Loader2, AlertCircle } from 'lucide-react'
 
 export default function SignupPageContent() {
-  const { isLoaded, signUp, setActive } = useSignUp()
+  const { isLoaded: signUpLoaded, signUp, setActive } = useSignUp()
+  const { isLoaded: userLoaded, isSignedIn } = useUser()
   const router = useRouter()
   const searchParams = useSearchParams()
 
@@ -25,6 +26,16 @@ export default function SignupPageContent() {
 
   const redirectUrl = searchParams.get('redirect') || '/'
   const action = searchParams.get('action')
+
+  // Redirect if already signed in
+  useEffect(() => {
+    if (userLoaded && isSignedIn) {
+      console.log('User already signed in, redirecting to:', redirectUrl)
+      setTimeout(() => {
+        window.location.href = redirectUrl
+      }, 500)
+    }
+  }, [userLoaded, isSignedIn, redirectUrl])
 
   const getSignupMessage = () => {
     if (action === 'contact') {
@@ -60,7 +71,7 @@ export default function SignupPageContent() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    if (!isLoaded) return
+    if (!signUpLoaded) return
 
     setLoading(true)
     setError('')
@@ -88,7 +99,7 @@ export default function SignupPageContent() {
 
   const handleVerify = async (e) => {
     e.preventDefault()
-    if (!isLoaded) return
+    if (!signUpLoaded) return
 
     setLoading(true)
     setError('')
@@ -114,12 +125,16 @@ export default function SignupPageContent() {
   }
 
   const handleGoogleSignUp = async () => {
-    if (!isLoaded) return
+    if (!signUpLoaded) return
 
     try {
+      const redirectUrlComplete = `${window.location.origin}/sso-callback?redirect_url=${encodeURIComponent(redirectUrl)}`
+      
+      console.log('Google Sign Up - Redirect URL:', redirectUrlComplete)
+
       await signUp.authenticateWithRedirect({
         strategy: 'oauth_google',
-        redirectUrl: '/sso-callback',
+        redirectUrl: redirectUrlComplete,
         redirectUrlComplete: redirectUrl,
       })
     } catch (err) {
@@ -128,12 +143,16 @@ export default function SignupPageContent() {
     }
   }
 
-  if (!isLoaded) {
+  if (!signUpLoaded || !userLoaded) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-slate-900 dark:to-slate-800 flex items-center justify-center">
         <Loader2 className="animate-spin text-blue-600" size={48} />
       </div>
     )
+  }
+
+  if (isSignedIn) {
+    return null
   }
 
   return (
@@ -359,6 +378,8 @@ export default function SignupPageContent() {
             </p>
           </div>
         </div>
+
+        <div id="clerk-captcha" className="mt-4" />
 
         <p className="mt-6 text-center text-xs text-slate-500 dark:text-slate-400">
           By signing up, you agree to our{' '}

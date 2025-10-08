@@ -22,12 +22,12 @@ const page = () => {
 
         <main
           className="relative w-full bg-[url('/assets/contact_bgpic.png')] bg-cover bg-center bg-no-repeat"
-          style={{ minHeight: '100vh' }}
+          style={{ minHeight: '60vh' }}
         >
           {/* Overlay to darken background */}
           <div className="absolute inset-0 bg-[#00000080] z-10"></div>
 
-          <section className="relative z-20 max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-20 md:py-28">
+          <section className="relative z-20 max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-26 md:py-28">
             {/* Header */}
             <div className="text-center mb-16">
               <h1 className="text-white font-extrabold text-4xl sm:text-5xl lg:text-6xl tracking-tight">

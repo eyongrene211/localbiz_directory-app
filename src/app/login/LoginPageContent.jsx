@@ -1,13 +1,14 @@
 'use client'
-import React, { useState }                               from 'react'
-import { useSignIn }                                     from '@clerk/nextjs'
+import React, { useState, useEffect }                    from 'react'
+import { useSignIn, useUser }                            from '@clerk/nextjs'
 import { useRouter, useSearchParams }                    from 'next/navigation'
 import Link                                              from 'next/link'
 import Image                                             from 'next/image'
 import { Mail, Lock, Eye, EyeOff, Loader2, AlertCircle } from 'lucide-react'
 
 export default function LoginPageContent() {
-  const { isLoaded, signIn, setActive } = useSignIn()
+  const { isLoaded: signInLoaded, signIn, setActive } = useSignIn()
+  const { isLoaded: userLoaded, isSignedIn } = useUser()
   const router = useRouter()
   const searchParams = useSearchParams()
 
@@ -19,9 +20,18 @@ export default function LoginPageContent() {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
-  // Get redirect URL and action from query params
   const redirectUrl = searchParams.get('redirect') || '/'
   const action = searchParams.get('action')
+
+  // Redirect if already signed in
+  useEffect(() => {
+    if (userLoaded && isSignedIn) {
+      console.log('User already signed in, redirecting to:', redirectUrl)
+      setTimeout(() => {
+        window.location.href = redirectUrl
+      }, 500)
+    }
+  }, [userLoaded, isSignedIn, redirectUrl])
 
   const getLoginMessage = () => {
     if (action === 'contact') {
@@ -63,7 +73,7 @@ export default function LoginPageContent() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    if (!isLoaded) return
+    if (!signInLoaded) return
 
     setLoading(true)
     setError('')
@@ -76,10 +86,6 @@ export default function LoginPageContent() {
 
       if (result.status === 'complete') {
         await setActive({ session: result.createdSessionId })
-        
-        console.log('✅ Login successful! Redirecting to:', redirectUrl)
-        
-        // Force a full page reload to ensure Clerk state updates
         window.location.href = redirectUrl
       } else {
         setError('Login incomplete. Please try again.')
@@ -93,12 +99,16 @@ export default function LoginPageContent() {
   }
 
   const handleGoogleSignIn = async () => {
-    if (!isLoaded) return
+    if (!signInLoaded) return
 
     try {
+      const redirectUrlComplete = `${window.location.origin}/sso-callback?redirect_url=${encodeURIComponent(redirectUrl)}`
+      
+      console.log('Google Sign In - Redirect URL:', redirectUrlComplete)
+
       await signIn.authenticateWithRedirect({
         strategy: 'oauth_google',
-        redirectUrl: '/sso-callback',
+        redirectUrl: redirectUrlComplete,
         redirectUrlComplete: redirectUrl,
       })
     } catch (err) {
@@ -107,7 +117,7 @@ export default function LoginPageContent() {
     }
   }
 
-  if (!isLoaded) {
+  if (!signInLoaded || !userLoaded) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-slate-900 dark:to-slate-800 flex items-center justify-center">
         <Loader2 className="animate-spin text-blue-600" size={48} />
@@ -115,11 +125,14 @@ export default function LoginPageContent() {
     )
   }
 
+  if (isSignedIn) {
+    return null
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-slate-900 dark:to-slate-800 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-xl p-8 border border-slate-200 dark:border-slate-700">
-          {/* Logo */}
           <Link href="/" className="flex justify-center mb-6 group">
             <Image
               src="/assets/images/logo2.png"
@@ -131,7 +144,6 @@ export default function LoginPageContent() {
             />
           </Link>
 
-          {/* Header with Context */}
           <div className="text-center mb-6">
             <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">
               {title}
@@ -139,7 +151,6 @@ export default function LoginPageContent() {
             <p className="text-slate-600 dark:text-slate-400">{subtitle}</p>
           </div>
 
-          {/* Action Context Banner */}
           {action && (
             <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg flex items-start gap-3">
               <AlertCircle className="text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" size={20} />
@@ -157,14 +168,12 @@ export default function LoginPageContent() {
             </div>
           )}
 
-          {/* Error */}
           {error && (
             <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
               <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
             </div>
           )}
 
-          {/* Google Sign In Button */}
           <button
             onClick={handleGoogleSignIn}
             disabled={loading}
@@ -191,7 +200,6 @@ export default function LoginPageContent() {
             Continue with Google
           </button>
 
-          {/* Divider */}
           <div className="relative mb-6">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-slate-300 dark:border-slate-700"></div>
@@ -203,7 +211,6 @@ export default function LoginPageContent() {
             </div>
           </div>
 
-          {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
@@ -254,7 +261,6 @@ export default function LoginPageContent() {
               </div>
             </div>
 
-            {/* Remember Me & Forgot Password */}
             <div className="flex items-center justify-between text-sm">
               <label className="flex items-center gap-2 text-slate-600 dark:text-slate-400 cursor-pointer">
                 <input
@@ -287,7 +293,6 @@ export default function LoginPageContent() {
             </button>
           </form>
 
-          {/* Sign Up Link */}
           <div className="mt-6 text-center">
             <p className="text-sm text-slate-600 dark:text-slate-400">
               Don't have an account?{' '}
@@ -301,7 +306,8 @@ export default function LoginPageContent() {
           </div>
         </div>
 
-        {/* Footer */}
+        <div id="clerk-captcha" className="mt-4" />
+
         <p className="mt-6 text-center text-xs text-slate-500 dark:text-slate-400">
           Protected by reCAPTCHA and subject to the{' '}
           <Link href="/privacy" className="underline hover:text-slate-700 dark:hover:text-slate-300">

@@ -53,7 +53,7 @@ export default function Page() {
 
       {/* Hero Section */}
       <section
-        className="relative w-full h-[500px] sm:h-[550px] md:h-[600px] xl:h-[650px] text-white"
+        className="relative w-full h-[500px] sm:h-[650px] mt-7 md:h-[600px] xl:h-[650px] text-white"
         style={{
           backgroundImage: `url('${image}')`,
           backgroundSize: 'cover',
