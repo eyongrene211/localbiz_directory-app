@@ -26,12 +26,10 @@ export default function LoginPageContent() {
   // Redirect if already signed in
   useEffect(() => {
     if (userLoaded && isSignedIn) {
-      console.log('User already signed in, redirecting to:', redirectUrl)
-      setTimeout(() => {
-        window.location.href = redirectUrl
-      }, 500)
+      console.log('✅ User already signed in, redirecting to:', redirectUrl)
+      router.push(redirectUrl)
     }
-  }, [userLoaded, isSignedIn, redirectUrl])
+  }, [userLoaded, isSignedIn, redirectUrl, router])
 
   const getLoginMessage = () => {
     if (action === 'contact') {
@@ -86,12 +84,13 @@ export default function LoginPageContent() {
 
       if (result.status === 'complete') {
         await setActive({ session: result.createdSessionId })
-        window.location.href = redirectUrl
+        console.log('✅ Email sign in complete, redirecting to:', redirectUrl)
+        router.push(redirectUrl)
       } else {
         setError('Login incomplete. Please try again.')
       }
     } catch (err) {
-      console.error('Login error:', err)
+      console.error('❌ Login error:', err)
       setError(err.errors?.[0]?.message || 'Invalid email or password')
     } finally {
       setLoading(false)
@@ -102,18 +101,24 @@ export default function LoginPageContent() {
     if (!signInLoaded) return
 
     try {
-      const redirectUrlComplete = `${window.location.origin}/sso-callback?redirect_url=${encodeURIComponent(redirectUrl)}`
-      
-      console.log('Google Sign In - Redirect URL:', redirectUrlComplete)
+      // Store redirect info in sessionStorage (persists during OAuth)
+      sessionStorage.setItem('auth_redirect', redirectUrl)
+      if (action) {
+        sessionStorage.setItem('auth_action', action)
+      }
 
+      console.log('🔵 Starting Google OAuth...')
+      console.log('📍 Redirect after auth:', redirectUrl)
+
+      // Use Clerk's OAuth with callback to sso-callback
       await signIn.authenticateWithRedirect({
         strategy: 'oauth_google',
-        redirectUrl: redirectUrlComplete,
-        redirectUrlComplete: redirectUrl,
+        redirectUrl: `${window.location.origin}/sso-callback`,
+        redirectUrlComplete: `${window.location.origin}/sso-callback`,
       })
     } catch (err) {
-      console.error('Google signin error:', err)
-      setError('Failed to sign in with Google')
+      console.error('❌ Google signin error:', err)
+      setError('Failed to sign in with Google. Please try again.')
     }
   }
 
@@ -126,7 +131,12 @@ export default function LoginPageContent() {
   }
 
   if (isSignedIn) {
-    return null
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-slate-900 dark:to-slate-800 flex items-center justify-center">
+        <Loader2 className="animate-spin text-blue-600" size={48} />
+        <p className="ml-4 text-slate-700 dark:text-slate-300">Redirecting...</p>
+      </div>
+    )
   }
 
   return (

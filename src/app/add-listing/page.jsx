@@ -16,6 +16,7 @@ import {
   Image as ImageIcon,
   ArrowLeft,
   ArrowRight,
+  PartyPopper,
 } from 'lucide-react'
 
 import NavBarComponent                from '@/components/NavBarComponent/NavBarComponent'
@@ -29,6 +30,24 @@ import {
   priceRangeOptions,
 } from '@/data/addListingFormData'
 
+// Initial form state
+const initialFormData = {
+  businessName: '',
+  category: null,
+  description: '',
+  region: null,
+  city: null,
+  address: '',
+  mapCoordinates: '',
+  phone: '',
+  email: '',
+  website: '',
+  whatsapp: '',
+  priceRange: null,
+  amenities: [],
+  businessHours: '',
+}
+
 export default function AddListingPage() {
   const { isSignedIn, user, isLoaded } = useUser()
   const router = useRouter()
@@ -37,22 +56,8 @@ export default function AddListingPage() {
   const [currentStep, setCurrentStep] = useState(1)
   const [selectedImages, setSelectedImages] = useState([])
   const [imagePreviewUrls, setImagePreviewUrls] = useState([])
-  const [formData, setFormData] = useState({
-    businessName: '',
-    category: null,
-    description: '',
-    region: null,
-    city: null,
-    address: '',
-    mapCoordinates: '',
-    phone: '',
-    email: '',
-    website: '',
-    whatsapp: '',
-    priceRange: null,
-    amenities: [],
-    businessHours: '',
-  })
+  const [formData, setFormData] = useState(initialFormData)
+  const [showSuccessModal, setShowSuccessModal] = useState(false)
 
   useEffect(() => {
     if (isLoaded && !isSignedIn) {
@@ -174,6 +179,20 @@ export default function AddListingPage() {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
+  const resetForm = () => {
+    // Clear all image URLs
+    imagePreviewUrls.forEach(url => URL.revokeObjectURL(url))
+    
+    // Reset all state
+    setFormData(initialFormData)
+    setSelectedImages([])
+    setImagePreviewUrls([])
+    setCurrentStep(1)
+    
+    // Scroll to top
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     
@@ -184,6 +203,7 @@ export default function AddListingPage() {
     setLoading(true)
 
     try {
+      // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 2000))
 
       const listingData = {
@@ -195,19 +215,23 @@ export default function AddListingPage() {
         createdAt: new Date().toISOString(),
       }
 
-      console.log('Submitting Listing:', listingData)
+      console.log('✅ Listing created:', listingData)
+      
+      // Show success modal
+      setShowSuccessModal(true)
       toast.success('🎉 Listing created successfully!')
       
-      setTimeout(() => {
-        router.push('/listings')
-      }, 2000)
-      
     } catch (error) {
-      console.error('Submission error:', error)
+      console.error('❌ Submission error:', error)
       toast.error('Failed to create listing. Please try again.')
     } finally {
       setLoading(false)
     }
+  }
+
+  const handleSuccessClose = () => {
+    setShowSuccessModal(false)
+    resetForm()
   }
 
   if (!isLoaded) {
@@ -233,6 +257,67 @@ export default function AddListingPage() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-slate-900 transition-colors">
       <NavBarComponent />
+
+      {/* Success Modal */}
+      <AnimatePresence>
+        {showSuccessModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={handleSuccessClose}
+          >
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+              transition={{ type: 'spring', duration: 0.5 }}
+              onClick={(e) => e.stopPropagation()}
+              className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl max-w-md w-full p-8 text-center"
+            >
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
+                className="w-20 h-20 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-6"
+              >
+                <PartyPopper className="text-green-600 dark:text-green-400" size={40} />
+              </motion.div>
+
+              <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-3">
+                Success! 🎉
+              </h2>
+              
+              <p className="text-slate-600 dark:text-slate-400 mb-2">
+                Your listing <span className="font-semibold text-slate-900 dark:text-white">"{formData.businessName}"</span> has been created successfully!
+              </p>
+              
+              <p className="text-sm text-slate-500 dark:text-slate-500 mb-6">
+                It will be reviewed and published within 24 hours.
+              </p>
+
+              <div className="space-y-3">
+                <button
+                  onClick={handleSuccessClose}
+                  className="w-full px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors"
+                >
+                  Add Another Listing
+                </button>
+                <button
+                  onClick={() => {
+                    setShowSuccessModal(false)
+                    router.push('/listing')
+                  }}
+                  className="w-full px-6 py-3 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 font-semibold rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
+                >
+                  View All Listings
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Header */}
       <motion.div
