@@ -1,7 +1,7 @@
 'use client'
 
-import React, { useState, useEffect } from "react";
-import { Button }                     from "@/components/ui/button";
+import React, { useState, useEffect } from 'react'
+import { Button }                     from '@/components/ui/button'
 import {
   Select,
   SelectContent,
@@ -10,95 +10,74 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import QuickViewCat                   from "../QuickViewCat/QuickViewCat";
+} from '@/components/ui/select'
+import QuickViewCat                   from '../QuickViewCat/QuickViewCat'
+
+// Import icon components
+import RestaurantIcon                 from '@/components/icons/RestaurantIcon'
+import BusinessShopsIcons             from '@/components/icons/BusinessShopsIcons'
+import ElectronicsIcon                from '@/components/icons/ElectronicsIcon'
+import HealthFitnessIcon              from '@/components/icons/HealthFitnessIcon'
+import OtherServicesIcon              from '@/components/icons/OtherServicesIcon'
 
 const bgImages = [
-  "/assets/banner-2-.jpg",
-  "/assets/contact_bgpic.png",
-  "/assets/images/Healthpic.jpg"
-];
+  '/assets/banner-2-.jpg',
+  '/assets/contact_bgpic.png',
+  '/assets/images/Healthpic.jpg'
+]
 
 const categories = [
   {
-    label: "Eat & Drinking",
-    href: "/categories/eat-drinking",
-    icon: (
-      <svg width="28" height="28" fill="none" viewBox="0 0 24 24">
-        <path d="M4 3v2a2 2 0 002 2h2v14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-        <path d="M20 3v2a2 2 0 01-2 2h-2v14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-        <rect x="8" y="3" width="8" height="4" rx="2" fill="currentColor" className="text-blue-500"/>
-      </svg>
-    )
+    label: 'Eat & Drinking',
+    href: '/categories/eat-drinking',
+    icon: RestaurantIcon
   },
   {
-    label: "Shopping",
-    href: "/categories/shopping",
-    icon: (
-      <svg width="28" height="28" fill="none" viewBox="0 0 24 24">
-        <path d="M6 2l1.5 4.5h9L18 2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-        <rect x="3" y="7" width="18" height="13" rx="2" stroke="currentColor" strokeWidth="2"/>
-        <circle cx="9" cy="17" r="1" fill="currentColor" className="text-blue-500"/>
-        <circle cx="15" cy="17" r="1" fill="currentColor" className="text-blue-500"/>
-      </svg>
-    )
+    label: 'Shopping',
+    href: '/categories/shopping',
+    icon: BusinessShopsIcons
   },
   {
-    label: "Electronics",
-    href: "/categories/electronics",
-    icon: (
-      <svg width="28" height="28" fill="none" viewBox="0 0 24 24">
-        <rect x="2" y="7" width="20" height="10" rx="2" stroke="currentColor" strokeWidth="2"/>
-        <path d="M8 21h8M12 17v4" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-      </svg>
-    )
+    label: 'Electronics',
+    href: '/categories/electronics',
+    icon: ElectronicsIcon
   },
   {
-    label: "Fitness & Gym",
-    href: "/categories/fitness-gym",
-    icon: (
-      <svg width="28" height="28" fill="none" viewBox="0 0 24 24">
-        <rect x="2" y="9" width="20" height="6" rx="2" stroke="currentColor" strokeWidth="2"/>
-        <path d="M6 9V7a2 2 0 012-2h8a2 2 0 012 2v2" stroke="currentColor" strokeWidth="2"/>
-      </svg>
-    )
+    label: 'Fitness & Gym',
+    href: '/categories/fitness-gym',
+    icon: HealthFitnessIcon
   },
   {
-    label: "Other Services",
-    href: "/categories/other-services",
-    icon: (
-      <svg width="28" height="28" fill="none" viewBox="0 0 24 24">
-        <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/>
-        <path d="M12 8v4l3 3" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-      </svg>
-    )
+    label: 'Other Services',
+    href: '/categories/other-services',
+    icon: OtherServicesIcon
   }
-];
+]
 
 const HeroComponent = () => {
-  const [bgIndex, setBgIndex] = useState(0);
-  const [fade, setFade] = useState(true);
+  const [bgIndex, setBgIndex] = useState(0)
+  const [fade, setFade] = useState(true)
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setFade(false);
+      setFade(false)
       setTimeout(() => {
-        setBgIndex((prev) => (prev + 1) % bgImages.length);
-        setFade(true);
-      }, 400);
-    }, 4000);
-    return () => clearInterval(interval);
-  }, []);
+        setBgIndex((prev) => (prev + 1) % bgImages.length)
+        setFade(true)
+      }, 400)
+    }, 4000)
+    return () => clearInterval(interval)
+  }, [])
 
   return (
     <section className="relative w-full h-fit py-4 md:py-6 flex flex-col justify-center items-center transition-colors duration-300 overflow-hidden">
       {/* Background image with smooth fade */}
       <div
-        className={`absolute inset-0 z-0 transition-opacity duration-700 ${fade ? "opacity-100" : "opacity-0"}`}
+        className={`absolute inset-0 z-0 transition-opacity duration-700 ${fade ? 'opacity-100' : 'opacity-0'}`}
         style={{
           backgroundImage: `url(${bgImages[bgIndex]})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center"
+          backgroundSize: 'cover',
+          backgroundPosition: 'center'
         }}
       />
       {/* Consistent dark overlay */}
@@ -132,7 +111,7 @@ const HeroComponent = () => {
                 <SelectGroup>
                   <SelectLabel>Category</SelectLabel>
                   {categories.map((cat) => (
-                    <SelectItem key={cat.label} value={cat.label.toLowerCase().replace(/ /g, "-")}>
+                    <SelectItem key={cat.label} value={cat.label.toLowerCase().replace(/ /g, '-')}>
                       {cat.label}
                     </SelectItem>
                   ))}
@@ -150,14 +129,14 @@ const HeroComponent = () => {
             <QuickViewCat
               key={cat.label}
               label={cat.label}
-              icon={cat.icon}
+              IconComponent={cat.icon}
               href={cat.href}
             />
           ))}
         </div>
       </div>
     </section>
-  );
-};
+  )
+}
 
-export default HeroComponent;
+export default HeroComponent
