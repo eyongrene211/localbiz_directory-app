@@ -27,24 +27,29 @@ const Page = () => {
       <main className="flex-1 w-full">
 
         {/* Hot & Trending Categories */}
-        <section className="py-16 bg-gray-50 dark:bg-slate-800 transition-colors duration-300">
-          <div className="max-w-7xl mx-auto flex flex-col items-center px-4 sm:px-6 lg:px-8">
+        <section className="py-16 bg-gray-50 dark:bg-slate-800 transition-colors duration-300 overflow-hidden">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <AnimatedSection direction="down" duration={0.7}>
               <h1 className="text-3xl font-bold text-gray-700 dark:text-gray-100 sm:text-4xl lg:text-5xl text-center mb-12">
                 Hot & Trending Categories
               </h1>
             </AnimatedSection>
             
-            <AnimatedSection direction="up" delay={0.2} duration={0.8}>
-              <div className="w-full">
-                <TopCatSlider />
-              </div>
-            </AnimatedSection>
+            {/* ✅ FIXED: Removed negative margin */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="w-full"
+            >
+              <TopCatSlider />
+            </motion.div>
           </div>
         </section>
 
         {/* Popular Listing */}
-        <section className="py-16 bg-white dark:bg-slate-900 transition-colors duration-300">
+        <section className="py-16 bg-white dark:bg-slate-900 transition-colors duration-300 overflow-hidden">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <AnimatedSection direction="fade" duration={0.7}>
               <h1 className="text-3xl font-bold text-gray-700 dark:text-gray-100 sm:text-4xl lg:text-5xl text-center mb-12">
@@ -52,7 +57,7 @@ const Page = () => {
               </h1>
             </AnimatedSection>
             
-            {/* ✅ FIXED: Removed AnimatedSection wrapper that was breaking slider */}
+            {/* ✅ FIXED: Removed negative margin */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -66,19 +71,23 @@ const Page = () => {
         </section>
 
         {/* Our Great Reviews */}
-        <section className="py-16 bg-gray-50 dark:bg-slate-800 transition-colors duration-300">
-          <div className="max-w-7xl mx-auto flex flex-col items-center px-4 sm:px-6 lg:px-8">
+        <section className="py-16 bg-gray-50 dark:bg-slate-800 transition-colors duration-300 overflow-hidden">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <AnimatedSection direction="down" duration={0.7}>
               <h1 className="text-3xl font-bold text-gray-700 dark:text-gray-100 sm:text-4xl lg:text-5xl text-center mb-10">
                 Our Great Reviews
               </h1>
             </AnimatedSection>
             
-            <AnimatedSection direction="up" delay={0.2} duration={0.8}>
-              <div className="relative pb-16 pt-2 w-full max-w-6xl mx-auto">
-                <ReviewList />
-              </div>
-            </AnimatedSection>
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="relative pb-16 pt-2 w-full max-w-6xl mx-auto"
+            >
+              <ReviewList />
+            </motion.div>
           </div>
         </section>
 

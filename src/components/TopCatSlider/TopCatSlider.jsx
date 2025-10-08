@@ -31,7 +31,7 @@ const TopCatSlider = () => {
           return (
             <SwiperSlide key={item.id} className="flex justify-center">
               <div
-                className="w-full max-w-[290px] h-[230px] rounded-xl shadow-lg relative overflow-hidden cursor-pointer border border-gray-200 dark:border-gray-700 group"
+                className="w-full max-w-[350px] h-[230px] rounded-xl shadow-lg relative overflow-hidden cursor-pointer border border-gray-200 dark:border-gray-700 group"
               >
                 {/* Background image hidden by default, shown on hover */}
                 <div
