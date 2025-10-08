@@ -6,10 +6,10 @@ export const blogPosts = [
     category: 'Cooking',
     categoryColor: 'green',
     excerpt: 'Join master chef Shree Patel for an exciting cooking workshop where you will learn traditional and modern culinary techniques.',
-    coverImage: '/assets/images/coffee.jpg',
+    coverImage: 'https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=800&q=80&auto=format&fit=crop',
     author: {
       name: 'Shree Patel',
-      avatar: '/assets/images/avatar1.jpg',
+      avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&q=80&auto=format&fit=crop',
       bio: 'Professional Chef with 15 years experience'
     },
     date: '2025-05-05',
@@ -54,10 +54,10 @@ export const blogPosts = [
     category: 'Business',
     categoryColor: 'blue',
     excerpt: 'Learn proven digital marketing strategies to grow your business online and reach more customers.',
-    coverImage: '/assets/images/marketing.jpg',
+    coverImage: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80&auto=format&fit=crop',
     author: {
       name: 'Jean Mbarga',
-      avatar: '/assets/images/avatar2.jpg',
+      avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&q=80&auto=format&fit=crop',
       bio: 'Digital Marketing Expert & Business Consultant'
     },
     date: '2025-05-12',
@@ -101,10 +101,10 @@ export const blogPosts = [
     category: 'Photography',
     categoryColor: 'purple',
     excerpt: 'Master the fundamentals of photography and learn to take professional-quality photos with any camera.',
-    coverImage: '/assets/images/photography.jpg',
+    coverImage: 'https://images.unsplash.com/photo-1452587925148-ce544e77e70d?w=800&q=80&auto=format&fit=crop',
     author: {
       name: 'Marie Fotso',
-      avatar: '/assets/images/avatar3.jpg',
+      avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&q=80&auto=format&fit=crop',
       bio: 'Award-winning Photographer & Visual Artist'
     },
     date: '2025-05-18',
@@ -143,10 +143,10 @@ export const blogPosts = [
     category: 'Technology',
     categoryColor: 'orange',
     excerpt: 'Connect with fellow entrepreneurs, investors, and tech enthusiasts in Cameroon\'s growing startup ecosystem.',
-    coverImage: '/assets/images/tech.jpg',
+    coverImage: 'https://images.unsplash.com/photo-1531482615713-2afd69097998?w=800&q=80&auto=format&fit=crop',
     author: {
       name: 'Patrick Nkeng',
-      avatar: '/assets/images/avatar4.jpg',
+      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80&auto=format&fit=crop',
       bio: 'Tech Entrepreneur & Startup Mentor'
     },
     date: '2025-05-25',
@@ -190,10 +190,10 @@ export const blogPosts = [
     category: 'Wellness',
     categoryColor: 'pink',
     excerpt: 'Rejuvenate your mind and body with a peaceful weekend yoga retreat in the beautiful Cameroonian countryside.',
-    coverImage: '/assets/images/yoga.jpg',
+    coverImage: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=800&q=80&auto=format&fit=crop',
     author: {
       name: 'Amina Sani',
-      avatar: '/assets/images/avatar5.jpg',
+      avatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=200&q=80&auto=format&fit=crop',
       bio: 'Certified Yoga Instructor & Wellness Coach'
     },
     date: '2025-06-01',
@@ -238,10 +238,10 @@ export const blogPosts = [
     category: 'Education',
     categoryColor: 'indigo',
     excerpt: 'Improve your French language skills with our comprehensive intensive course designed for all proficiency levels.',
-    coverImage: '/assets/images/french.jpg',
+    coverImage: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800&q=80&auto=format&fit=crop',
     author: {
       name: 'Dr. Sophie Kamga',
-      avatar: '/assets/images/avatar6.jpg',
+      avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=200&q=80&auto=format&fit=crop',
       bio: 'French Language Professor & Cultural Expert'
     },
     date: '2025-06-08',

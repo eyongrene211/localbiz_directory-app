@@ -1,4 +1,5 @@
 import React             from 'react'
+import { motion }        from 'framer-motion'
 import NavBarComponent   from '@/components/NavBarComponent/NavBarComponent'
 import FooterComponent   from '@/components/Footer/FooterComponent'
 import { blogPosts }     from '@/data/blogData'

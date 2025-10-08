@@ -1,23 +1,23 @@
 'use client'
 
-import React             from 'react';
-import Link              from 'next/link';
-import { motion }        from 'framer-motion';
-import NavBarComponent   from '@/components/NavBarComponent/NavBarComponent';
-import HeroComponent     from '../components/HeroComponent/HeroComponent';
-import TopCatSlider      from '@/components/TopCatSlider/TopCatSlider';
-import TopListingsSlider from '@/components/TopListingsSlider';
-import EventComponent    from '@/components/EventComponent/EventComponent';
-import FooterComponent   from '@/components/Footer/FooterComponent';
-import SubscribeLetter   from '@/components/SubscribeSection/SubscribeLetter';
-import ReviewList        from '@/components/ReviewList/ReviewList';
-import AnimatedSection   from '@/components/AnimatedSection/AnimatedSection';
-import { blogPosts }     from '@/data/blogData';
-import { ArrowRight }    from 'lucide-react';
+import React             from 'react'
+import Link              from 'next/link'
+import { motion }        from 'framer-motion'
+import NavBarComponent   from '@/components/NavBarComponent/NavBarComponent'
+import HeroComponent     from '../components/HeroComponent/HeroComponent'
+import TopCatSlider      from '@/components/TopCatSlider/TopCatSlider'
+import TopListingsSlider from '@/components/TopListingsSlider'
+import EventComponent    from '@/components/EventComponent/EventComponent'
+import FooterComponent   from '@/components/Footer/FooterComponent'
+import SubscribeLetter   from '@/components/SubscribeSection/SubscribeLetter'
+import ReviewList        from '@/components/ReviewList/ReviewList'
+import AnimatedSection   from '@/components/AnimatedSection/AnimatedSection'
+import { blogPosts }     from '@/data/blogData'
+import { ArrowRight }    from 'lucide-react'
 
 const Page = () => {
-  // Get first 3 blog posts for homepage
-  const featuredPosts = blogPosts.slice(0, 3);
+  // Get first 4 blog posts for homepage (to show 4 on tablets)
+  const featuredPosts = blogPosts.slice(0, 4)
 
   return (
     <div className="min-h-screen bg-white dark:bg-slate-900 overflow-x-hidden transition-colors duration-300 flex flex-col">
@@ -35,7 +35,6 @@ const Page = () => {
               </h1>
             </AnimatedSection>
             
-            {/* ✅ FIXED: Removed negative margin */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -57,7 +56,6 @@ const Page = () => {
               </h1>
             </AnimatedSection>
             
-            {/* ✅ FIXED: Removed negative margin */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -110,7 +108,7 @@ const Page = () => {
               </div>
             </AnimatedSection>
 
-            {/* Events Grid with Staggered Animation */}
+            {/* Events Grid - Responsive: 1 col mobile, 2 cols tablet (4 items), 3 cols desktop (3 items) */}
             <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {featuredPosts.map((post, index) => (
                 <AnimatedSection 
@@ -118,6 +116,7 @@ const Page = () => {
                   direction="up" 
                   delay={0.1 + (index * 0.15)} 
                   duration={0.6}
+                  className={index === 3 ? 'lg:hidden' : ''}
                 >
                   <EventComponent post={post} />
                 </AnimatedSection>
@@ -146,7 +145,7 @@ const Page = () => {
       
       <FooterComponent />
     </div>
-  );
-};
+  )
+}
 
-export default Page;
+export default Page

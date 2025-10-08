@@ -5,8 +5,8 @@ export default function RangeSlider({
   min = 0,
   max = 600000,
   step = 1000,
-  initialMin = 20000,
-  initialMax = 150000,
+  initialMin = 5000,
+  initialMax = 450000,
   currency = 'FCFA ',
   onChange,
 }) {

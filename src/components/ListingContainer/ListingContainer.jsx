@@ -1,13 +1,13 @@
 'use client'
 import { X, SlidersHorizontal }                             from 'lucide-react'
 import React, { useMemo, useState, useEffect, useCallback } from 'react'
+import { motion }                                           from 'framer-motion'
 import FilterDropdown                                       from '../FilterDropDown/FilterDropdown'
 import ListingCardGrid                                      from '../ListingCardGrid'
 import ListFilteredSidebar                                  from '../ListFilteredSidebar/ListFilteredSidebar'
 import Pagination                                           from '../Pagination/Pagination'
 import { listingsData }                                     from '../../data/listingsData'
-import MobileFilterDrawer                                   from './MobileFilterDrawser';
-
+import MobileFilterDrawer                                   from './MobileFilterDrawser'
 
 // Sort helpers
 const compareStrings = (a = '', b = '') => a.localeCompare(b, undefined, { sensitivity: 'base' })
@@ -138,9 +138,19 @@ const ListingContainer = () => {
   }
 
   return (
-    <div className="w-full">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+      className="w-full"
+    >
       {/* Mobile/Tablet top bar with Filters button */}
-      <div className="mb-4 lg:hidden flex items-center justify-between">
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: 0.1 }}
+        className="mb-4 lg:hidden flex items-center justify-between"
+      >
         <button
           onClick={() => setDrawerOpen(true)}
           className="inline-flex items-center gap-2 rounded-lg border border-gray-300 dark:border-gray-600 px-4 py-2 bg-white dark:bg-slate-800 text-sm text-gray-700 dark:text-gray-200 shadow-sm hover:bg-gray-50 dark:hover:bg-slate-700 transition"
@@ -149,30 +159,48 @@ const ListingContainer = () => {
           Filters
         </button>
         <FilterDropdown value={sortOption} onChange={setSortOption} />
-      </div>
+      </motion.div>
 
       <div className="grid lg:grid-cols-3 gap-6">
         {/* Desktop Sidebar */}
-        <div className="hidden lg:block h-max rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-slate-900 p-6 shadow-sm">
-          <ListFilteredSidebar onApply={(p) => { handleApplyFilters(p); }} />
-        </div>
+        <motion.div
+          initial={{ opacity: 0, x: -50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="hidden lg:block h-max rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-slate-900 p-6 shadow-sm"
+        >
+          <ListFilteredSidebar onApply={(p) => { handleApplyFilters(p) }} />
+        </motion.div>
 
         {/* Main Content */}
-        <div className="lg:col-span-2 flex flex-col gap-6 border border-gray-200 dark:border-gray-700 bg-white dark:bg-slate-900 rounded-xl p-6 shadow-sm">
+        <motion.div
+          initial={{ opacity: 0, x: 50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+          className="lg:col-span-2 flex flex-col gap-6 border border-gray-200 dark:border-gray-700 bg-white dark:bg-slate-900 rounded-xl p-6 shadow-sm"
+        >
           {/* Active Filters */}
-          <div className="flex items-center justify-between flex-wrap gap-3">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+            className="flex items-center justify-between flex-wrap gap-3"
+          >
             <div className="flex items-center gap-2 flex-wrap">
               {chips.length > 0 ? (
-                chips.map((c) => (
-                  <span
+                chips.map((c, idx) => (
+                  <motion.span
                     key={c.key + c.label}
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.3, delay: 0.1 * idx }}
                     className="text-xs sm:text-sm flex items-center px-3 py-1 gap-2 rounded-full border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-gray-200"
                   >
                     <span>{c.label}</span>
                     <button className="hover:text-red-500 transition" onClick={() => removeChip(c.key)} aria-label={`Remove ${c.label}`}>
                       <X size={14} />
                     </button>
-                  </span>
+                  </motion.span>
                 ))
               ) : (
                 <span className="text-sm text-gray-500 dark:text-gray-400">No filters applied</span>
@@ -184,15 +212,20 @@ const ListingContainer = () => {
             >
               Clear All
             </button>
-          </div>
+          </motion.div>
 
           {/* Results Count & Sort (desktop) */}
-          <div className="hidden lg:flex items-center justify-between border-b border-gray-200 dark:border-gray-700 pb-4">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.5 }}
+            className="hidden lg:flex items-center justify-between border-b border-gray-200 dark:border-gray-700 pb-4"
+          >
             <span className="text-sm font-semibold text-gray-700 dark:text-gray-200">
               {totalItems} Listings Found
             </span>
             <FilterDropdown value={sortOption} onChange={setSortOption} />
-          </div>
+          </motion.div>
 
           {/* Results Count (mobile/tablet, separate line for tighter layout) */}
           <div className="lg:hidden -mt-2 text-sm text-gray-700 dark:text-gray-200">
@@ -200,16 +233,29 @@ const ListingContainer = () => {
           </div>
 
           {/* Listings Grid */}
-          <ListingCardGrid data={pageData} />
+          <motion.div
+            key={currentPage}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <ListingCardGrid data={pageData} />
+          </motion.div>
 
           {/* Pagination */}
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-            siblingCount={1}
-          />
-        </div>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.6 }}
+          >
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+              siblingCount={1}
+            />
+          </motion.div>
+        </motion.div>
       </div>
 
       {/* Mobile/Tablet Drawer */}
@@ -224,7 +270,7 @@ const ListingContainer = () => {
           }}
         />
       </MobileFilterDrawer>
-    </div>
+    </motion.div>
   )
 }
 
